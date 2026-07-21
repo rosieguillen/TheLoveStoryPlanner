@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Love Story Planner</title>
+    <link rel="stylesheet" href="HomePageStyle.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Elms+Sans:ital,wght@0,100..900;1,100..900&family=Google+Sans:ital,opsz,wght@0,17..18,400..700;1,17..18,400..700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+<div class="topbar">
+        <a href="/HomePage.html">
+            <img
+                src="photos/logo-long.png"
+                alt="The Love Story Planner Logo"
+                class="logo"
+            >
+        </a>
+
+        <nav>
+            <a href="#home">Home</a>
+            <a href="#about">About Us</a>
+            <a href="#services">Services</a>
+            <a href="#journal">Journal</a>
+            <a href="/Contact">Contact</a>
+            <a href="/Signin">Sign In</a>
+        </nav>
+</div>
+
+<header class="header-banner" id="home">
+    <div class="headerpic">
+        <img
+            src="photos//header.png"
+            alt="The Love Story Planner Header Image"
+            class="header-img"
+        >
+    </div>
+
+<button
+    type="button"
+    class="btn-quote"
+    onclick="document.querySelector('#quote-form').scrollIntoView({behavior: 'smooth' })">
+    PLAN YOUR LOVE STORY WITH US
+</button>
+
+
+<section class="about" id="about">
+    <div class="about-content">
+        <img src="photos/about-photo.png" alt="Planner with couple" class="about-image">
+        <div class="about-text">
+            <h2>About Us</h2>
+            <h3>   The Love Story Planner is a boutique wedding planning studio
+                dedicated to creating celebrations that feel personal,
+                meaningful, and completely unique to each couple.</h3>
+            <h3> Our goal is simple: to take the stress out of planning so you
+                can stay present, enjoy the journey, and make lasting memories
+                with the people you love.</h3>
+        </div>
+    </div>
+</section>
+
+<section class="services" id="services">
+    <h2>Our Services</h2>
+    <div class="services-container">
+        <div class="service-card">
+            <div class="service-icon">
+                <img src="photos/icon-fullplanning.png" alt="Full Planning icon">
+            </div>
+            <h3>Full Planning</h3>
+            <p>Complete wedding planning from start to finish, including venue selection, vendor coordination, and design consultation.</p>
+        </div>
+        <div class="service-card">
+            <div class="service-icon">
+                <img src="photos/icon-dayof.png" alt="Day-of Coordination icon">
+            </div>
+            <h3>Day-of Coordination</h3>
+            <p>Professional coordination on your wedding day to ensure everything runs smoothly and stress-free.</p>
+        </div>
+        <div class="service-card">
+            <div class="service-icon">
+                <img src="photos/icon-design.png" alt="Design and Decor icon">
+            </div>
+            <h3>Design & Decor</h3>
+            <p>Custom design concepts and decorative styling to bring your wedding vision to life.</p>
+        </div>
+    </div>
+</section>
+
+
+<section class="quote-form" id="quote-form">
+
+<section id="journal" class="journal">
+    <p>From Our Journal</p>
+    <h2>Helpful notes for the road to "I do."</h2>
+    <div class="journal-intro">
+        <label> Category</label>
+        <select>
+            <option value="all">All</option>
+            <option value="planning">Planning</option>
+            <option value="decor">Decor</option>
+            <option value="venues">Venues</option>
+        </select>
+    </div>
+    <div class="journal-container">
+        <div class="journal-entry">
+            <img src="photos/journal1.png" alt="Journal Entry 1">
+            <h3>5 Tips for Planning Your Dream Wedding</h3>
+            <p>Discover essential tips to make your wedding planning process smooth and enjoyable.</p>
+            <a href="/Journal/entry1" class="btn-readmore">Read More</a>
+        </div>
+        <div class="journal-entry">
+            <img src="journal2.png" alt="Journal Entry 2">
+            <h3>How to Choose the Perfect Venue</h3>
+            <p>Learn how to select a venue that reflects your style and accommodates your guests.</p>
+            <a href="/Journal/entry2" class="btn-readmore">Read More</a>
+        </div>
+        <div class="journal-entry">
+            <img src="journal3.png" alt="Journal Entry 3">
+            <h3>Creative Wedding Decor Ideas</h3>
+            <p>Explore unique decor ideas to make your wedding day unforgettable.</p>
+            <a href="/Journal/entry3" class="btn-readmore">Read More</a>
+        </div>
+    </div>
+
+
+
+</section>
+
+<footer class="site-footer">
+    <div class="footer-content">
+        <div class="footer-column">
+            <h3>The Love Story Planner</h3>
+            <p>Creating beautiful weddings with care, creativity, and attention to every detail.</p>
+        </div>
+        <div class="footer-column">
+            <h3>Contact</h3>
+            <p>Email: hello@lovestoryplanner.com</p>
+            <p>Phone: (555) 123-4567</p>
+        </div>
+        <div class="footer-column">
+            <h3>Follow Us</h3>
+            <p>Instagram | Pinterest | Facebook</p>
+        </div>
+    </div>
+    <p class="footer-note">© 2026 The Love Story Planner. All Rights Reserved.</p>
+</footer>
+</body>
+</html>
