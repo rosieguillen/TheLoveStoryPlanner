@@ -15,7 +15,7 @@ if (
     !empty($_SESSION['admin_logged_in']) &&
     !empty($_SESSION['user_id'])
 ) {
-    header('Location: post.php');
+    header('Location: admin.php');
     exit;
 }
 
@@ -72,7 +72,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $_SESSION['admin_username'] =
                 $user['Username'];
 
-            header('Location: post.php');
+            header('Location: admin.php');
             exit;
         }
 

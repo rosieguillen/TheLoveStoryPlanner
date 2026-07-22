@@ -1,0 +1,130 @@
+:root {
+    --pink: #f993b2;
+    --pink-dark: #d96f91;
+    --pink-soft: #fff2f6;
+    --charcoal: #444142;
+    --body-text: #706b6d;
+    --border: #efd8df;
+    --white: #ffffff;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    min-height: 100vh;
+    margin: 0;
+    color: var(--charcoal);
+    font-family: "Elms Sans", sans-serif;
+    background: #fffafa;
+}
+
+.logout-page {
+    display: grid;
+    min-height: 70vh;
+    padding: 70px 20px 90px;
+    place-items: center;
+}
+
+.logout-card {
+    width: min(100%, 620px);
+    padding: 56px 50px;
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    background: var(--white);
+    box-shadow: 0 18px 45px rgba(68, 65, 66, 0.11);
+    text-align: center;
+}
+
+.logout-mark {
+    display: grid;
+    width: 58px;
+    height: 58px;
+    margin: 0 auto 24px;
+    border-radius: 50%;
+    background: var(--pink-soft);
+    color: var(--pink-dark);
+    font-size: 27px;
+    font-weight: 700;
+    place-items: center;
+}
+
+.logout-label {
+    margin: 0 0 10px;
+    color: var(--pink-dark);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.17em;
+    text-transform: uppercase;
+}
+
+.logout-card h1 {
+    margin: 0 0 18px;
+    font-size: clamp(36px, 6vw, 52px);
+    line-height: 1.1;
+}
+
+.logout-message {
+    max-width: 470px;
+    margin: 0 auto;
+    color: var(--body-text);
+    font-size: 17px;
+    line-height: 1.7;
+}
+
+.logout-actions {
+    display: flex;
+    justify-content: center;
+    gap: 14px;
+    margin-top: 34px;
+}
+
+.logout-actions a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 145px;
+    padding: 13px 20px;
+    border-radius: 8px;
+    font-weight: 700;
+    text-decoration: none;
+    transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.primary-button {
+    border: 1px solid var(--pink);
+    background: var(--pink);
+    color: var(--white);
+}
+
+.primary-button:hover {
+    border-color: var(--charcoal);
+    background: var(--charcoal);
+}
+
+.secondary-button {
+    border: 1px solid var(--border);
+    background: var(--white);
+    color: var(--charcoal);
+}
+
+.secondary-button:hover {
+    border-color: var(--pink);
+    color: var(--pink-dark);
+}
+
+@media (max-width: 520px) {
+    .logout-card {
+        padding: 42px 24px;
+    }
+
+    .logout-actions {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .logout-actions a {
+        width: 100%;
+    }
+}

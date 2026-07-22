@@ -90,6 +90,6 @@
     <a href="blogposts.php">Blog</a>
     <a href="connect.php">Contact</a>
     <a href="HomePage.php#services">Services</a>
-    <a href="authenticate.php">Sign In</a>
+    <a href="authenticate.php">Admin Area</a>
 </nav>
 </div>
