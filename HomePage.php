@@ -9,7 +9,7 @@ $latestPostQuery = "
         `timestamp`,
         blog_image
     FROM blogspots
-    ORDER BY `timestamp` DESC
+    ORDER BY `timestamp` DESC, blogID DESC
     LIMIT 3
 ";
 
@@ -57,7 +57,7 @@ function homeEscape(?string $value): string
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>The Love Story Planner</title>
-    <link rel="stylesheet" href="HomePageStyle.css">
+    <link rel="stylesheet" href="HomePageStyle.css?v=20260722-2">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Elms+Sans:ital,wght@0,100..900;1,100..900&family=Google+Sans:ital,opsz,wght@0,17..18,400..700;1,17..18,400..700&display=swap" rel="stylesheet">
@@ -86,15 +86,36 @@ function homeEscape(?string $value): string
 
 <section class="about" id="about">
     <div class="about-content">
-        <img src="photos/about-photo.png" alt="Planner with couple" class="about-image">
+        <div class="about-visual">
+            <div class="about-image-frame">
+                <img src="photos/about-photo.png" alt="Wedding planner meeting with a couple" class="about-image">
+            </div>
+
+        </div>
+
         <div class="about-text">
-            <h2>About Us</h2>
-            <h3>   The Love Story Planner is a boutique wedding planning studio
-                dedicated to creating celebrations that feel personal,
-                meaningful, and completely unique to each couple.</h3>
-            <h3> Our goal is simple: to take the stress out of planning so you
-                can stay present, enjoy the journey, and make lasting memories
-                with the people you love.</h3>
+            <p class="about-label">Meet Your Planning Team</p>
+            <h2>Your love story deserves a celebration that feels like you.</h2>
+
+            <p class="about-lead">
+                The Love Story Planner is a boutique wedding planning studio
+                creating celebrations that feel personal, meaningful and
+                completely unique to every couple.
+            </p>
+
+            <p>
+                We handle the timelines, details and behind-the-scenes
+                coordination so you can stay present, enjoy the journey and
+                make lasting memories with the people you love.
+            </p>
+
+            <ul class="about-highlights" aria-label="What we provide">
+                <li>Personalized planning</li>
+                <li>Calm coordination</li>
+                <li>Intentional design</li>
+            </ul>
+
+            <a href="#quote-form" class="about-cta">Start Planning With Us</a>
         </div>
     </div>
 </section>
