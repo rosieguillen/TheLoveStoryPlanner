@@ -9,47 +9,6 @@ body {
     background-color: rgb(255, 255, 255);
 }
 
-.topbar {
-    position: sticky;
-    top: 0;
-    z-index: 1000;
-
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-
-    width: 100%;
-    padding: 20px 60px;
-    box-sizing: border-box;
-    background-color: white;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.logo {
-    width: 300px;
-}
-
-nav {
-    display: flex;
-    gap: 60px;
-}
-
-nav a {
-    text-decoration: none;
-    color: #444142;
-    margin-left: 25px;
-    font-weight: bold;
-    font-size: 18px;
-}
-
-nav a:hover {
-    color: #f993b2;
-    transform: translateY(-5px);
-    text-decoration: underline;
-    text-underline-offset: 25px;
-    text-decoration-thickness: 3px;
-}
-
 .header-banner {
     position: relative;
 }
@@ -127,7 +86,7 @@ nav a:hover {
 
 .about-text h2 {
     font-size: 36px;
-    color: #444142;
+    color: #f993b2;
     margin-bottom: 16px;
 }
 
@@ -216,106 +175,302 @@ nav a:hover {
     color: black;
     line-height: 1.6;
 }
-.portfolio {
-    padding: 80px 60px;
-    background-color: #f8f8f8;
+
+.home-blog {
+    padding: 95px 28px;
+    color: #26352f;
+    background-color: #fbfaf7;
+}
+
+.home-blog-heading {
+    max-width: 750px;
+    margin: 0 auto 42px;
     text-align: center;
 }
 
-.portfolio h2 {
-    font-size: 40px;
-    color: #444142;
-    margin-bottom: 60px;
+.home-blog-label {
+    margin: 0 0 10px;
+    color: #d97594;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
 }
 
-.gallery-container {
+.home-blog-heading h2 {
+    margin: 0 0 16px;
+    color: #26352f;
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: clamp(38px, 5vw, 58px);
+    font-weight: 400;
+    line-height: 1.12;
+}
+
+.home-blog-introduction {
+    max-width: 600px;
+    margin: 0 auto;
+    color: #676b68;
+    font-size: 17px;
+    line-height: 1.7;
+}
+
+/* Category filters */
+
+.blog-filters {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 9px;
+    width: min(1650px, 100%);
+    margin: 0 auto 32px;
+}
+
+.blog-filter {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 38px;
+    padding: 8px 18px;
+    border: 1px solid #d8d6d0;
+    border-radius: 999px;
+    background-color: transparent;
+    color: #26352f;
+    font-size: 13px;
+    text-decoration: none;
+    transition:
+        color 0.2s ease,
+        background-color 0.2s ease,
+        border-color 0.2s ease;
+}
+
+.blog-filter:hover,
+.blog-filter.active {
+    border-color: #26352f;
+    background-color: #26352f;
+    color: white;
+}
+
+/* Cards */
+
+.home-blog-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 30px;
-    max-width: 1200px;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 24px;
+    width: min(1650px, 100%);
     margin: 0 auto;
 }
 
-.gallery-item {
-    position: relative;
-    overflow: hidden;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    cursor: pointer;
-    height: 300px;
+.home-blog-card {
+    min-width: 0;
 }
 
-.gallery-item img {
+.home-blog-image-link {
+    display: block;
+    color: inherit;
+    text-decoration: none;
+}
+
+.home-blog-image {
+    position: relative;
+    overflow: hidden;
+    aspect-ratio: 1.34 / 1;
+    background-color: #b9c1b5;
+}
+
+.home-blog-image-2 {
+    background-color: #cca09c;
+}
+
+.home-blog-image-3 {
+    background-color: #cbb88d;
+}
+
+.home-blog-image img {
+    display: block;
     width: 100%;
     height: 100%;
     object-fit: cover;
-    transition: transform 0.3s ease;
+    transition: transform 0.5s ease;
 }
 
-.gallery-item:hover img {
-    transform: scale(1.05);
+.home-blog-card:hover .home-blog-image img {
+    transform: scale(1.04);
 }
 
-.gallery-overlay {
+.image-category {
     position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
-    padding: 30px 20px 20px;
-    transform: translateY(50%);
-    transition: transform 0.3s ease;
+    top: 20px;
+    left: 18px;
+    z-index: 2;
+    padding: 7px 12px;
+    background-color: rgba(255, 255, 255, 0.94);
+    color: #26352f;
+    font-size: 10px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
 }
 
-.gallery-item:hover .gallery-overlay {
-    transform: translateY(0);
+.card-number {
+    position: absolute;
+    right: 18px;
+    bottom: 8px;
+    z-index: 2;
+    color: rgba(255, 255, 255, 0.63);
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: clamp(48px, 5vw, 67px);
 }
 
-.gallery-overlay h3 {
-    font-size: 20px;
-    color: #fff;
-    margin: 0 0 5px 0;
+/* Decorative fallback when a post has no image */
+
+.decorative-arch {
+    position: absolute;
+    bottom: -2px;
+    left: 50%;
+    width: 58%;
+    height: 63%;
+    border: 17px solid rgba(255, 255, 255, 0.18);
+    border-bottom: 0;
+    border-radius: 180px 180px 0 0;
+    background-color: rgba(255, 255, 255, 0.55);
+    transform: translateX(-50%);
 }
 
-.gallery-overlay p {
-    font-size: 14px;
-    color: #f993b2;
-    margin: 0;
+/* Text under cards */
+
+.home-blog-meta {
+    display: flex;
+    justify-content: space-between;
+    gap: 15px;
+    margin: 16px 0 13px;
+    color: #26352f;
+    font-size: 10px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
 }
 
-.site-footer {
-    background-color: #FFF9F9;
-    color: #444142;
-    padding: 60px 40px;
+.home-blog-card h3 {
+    margin: 0 0 10px;
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: clamp(25px, 2.2vw, 33px);
+    font-weight: 400;
+    line-height: 1.2;
+}
+
+.home-blog-card h3 a {
+    color: #26352f;
+    text-decoration: none;
+}
+
+.home-blog-card h3 a:hover {
+    color: #d97594;
+}
+
+.home-blog-excerpt {
+    margin: 0 0 13px;
+    color: #59615d;
+    font-size: 16px;
+    line-height: 1.55;
+}
+
+.home-blog-read {
+    display: inline-block;
+    padding-bottom: 5px;
+    border-bottom: 1px solid #26352f;
+    color: #26352f;
+    font-size: 11px;
+    letter-spacing: 1px;
+    text-decoration: none;
+    text-transform: uppercase;
+}
+
+.home-blog-read:hover {
+    color: #d97594;
+    border-color: #d97594;
+}
+
+.all-posts-container {
+    margin-top: 55px;
     text-align: center;
 }
 
-.footer-content {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 40px;
-    max-width: 1100px;
-    margin: 0 auto 30px;
+.all-posts-button {
+    display: inline-block;
+    padding: 13px 25px;
+    border: 2px solid #f993b2;
+    border-radius: 8px;
+    background-color: #f993b2;
+    color: white;
+    font-weight: 700;
+    text-decoration: none;
+    transition:
+        background-color 0.2s ease,
+        border-color 0.2s ease,
+        transform 0.2s ease;
 }
 
-.footer-column {
-    flex: 1 1 220px;
-    min-width: 220px;
+.all-posts-button:hover {
+    border-color: #26352f;
+    background-color: #26352f;
+    transform: translateY(-2px);
 }
 
-.footer-column h3 {
-    font-size: 20px;
-    margin-bottom: 15px;
+.home-blog-empty {
+    width: min(800px, 100%);
+    margin: 0 auto;
+    padding: 60px 25px;
+    border: 1px solid #e5ded7;
+    text-align: center;
 }
 
-.footer-column p {
-    margin: 8px 0;
-    color: #444142;
+.home-blog-empty h3 {
+    margin: 0 0 10px;
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 30px;
+    font-weight: 400;
 }
 
-.footer-note {
-    font-size: 14px;
-    color: #a5a4a4;
+.home-blog-empty p {
+    margin: 0;
+    color: #676b68;
 }
+
+/* Responsive */
+
+@media (max-width: 1000px) {
+    .home-blog-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .home-blog-card:last-child {
+        grid-column: 1 / -1;
+        width: calc(50% - 12px);
+        margin: 0 auto;
+    }
+}
+
+@media (max-width: 700px) {
+    .home-blog {
+        padding: 65px 20px;
+    }
+
+    .blog-filters {
+        justify-content: center;
+    }
+
+    .home-blog-grid {
+        grid-template-columns: 1fr;
+        gap: 42px;
+    }
+
+    .home-blog-card:last-child {
+        grid-column: auto;
+        width: auto;
+        margin: 0;
+    }
+
+    .home-blog-image {
+        aspect-ratio: 1.25 / 1;
+    }
+}
+
 

@@ -1,3 +1,56 @@
+<?php
+require_once __DIR__ . '/connect.php';
+
+$latestPostQuery = "
+    SELECT
+        blogID,
+        title,
+        content,
+        `timestamp`,
+        blog_image
+    FROM blogspots
+    ORDER BY `timestamp` DESC
+    LIMIT 3
+";
+
+$latestPostStatement = $db->prepare($latestPostQuery);
+$latestPostStatement->execute();
+
+$latestPosts = $latestPostStatement->fetchAll(
+    PDO::FETCH_ASSOC
+);
+
+function homeBlogExcerpt(
+    string $content,
+    int $length = 130
+): string {
+    $content = trim(strip_tags($content));
+
+    if (mb_strlen($content) > $length) {
+        return mb_substr($content, 0, $length) . '…';
+    }
+
+    return $content;
+}
+
+function homeBlogReadTime(string $content): int
+{
+    $words = str_word_count(strip_tags($content));
+
+    return max(1, (int) ceil($words / 200));
+}
+
+function homeEscape(?string $value): string
+{
+    return htmlspecialchars(
+        $value ?? '',
+        ENT_QUOTES,
+        'UTF-8'
+    );
+}
+?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -12,24 +65,7 @@
 
 <body>
 
-<div class="topbar">
-        <a href="/HomePage.html">
-            <img
-                src="photos/logo-long.png"
-                alt="The Love Story Planner Logo"
-                class="logo"
-            >
-        </a>
-
-        <nav>
-            <a href="#home">Home</a>
-            <a href="#about">About Us</a>
-            <a href="#services">Services</a>
-            <a href="#journal">Journal</a>
-            <a href="/Contact">Contact</a>
-            <a href="/Signin">Sign In</a>
-        </nav>
-</div>
+<?php include __DIR__ . '/includes/topbar.php'; ?>
 
 <header class="header-banner" id="home">
     <div class="headerpic">
@@ -91,62 +127,123 @@
 </section>
 
 
-<section class="quote-form" id="quote-form">
+<section id="blog" class="home-blog">
+    <div class="home-blog-heading">
+        <p class="home-blog-label">From Our Blog</p>
 
-<section id="journal" class="journal">
-    <p>From Our Journal</p>
-    <h2>Helpful notes for the road to "I do."</h2>
-    <div class="journal-intro">
-        <label> Category</label>
-        <select>
-            <option value="all">All</option>
-            <option value="planning">Planning</option>
-            <option value="decor">Decor</option>
-            <option value="venues">Venues</option>
-        </select>
-    </div>
-    <div class="journal-container">
-        <div class="journal-entry">
-            <img src="photos/journal1.png" alt="Journal Entry 1">
-            <h3>5 Tips for Planning Your Dream Wedding</h3>
-            <p>Discover essential tips to make your wedding planning process smooth and enjoyable.</p>
-            <a href="/Journal/entry1" class="btn-readmore">Read More</a>
-        </div>
-        <div class="journal-entry">
-            <img src="journal2.png" alt="Journal Entry 2">
-            <h3>How to Choose the Perfect Venue</h3>
-            <p>Learn how to select a venue that reflects your style and accommodates your guests.</p>
-            <a href="/Journal/entry2" class="btn-readmore">Read More</a>
-        </div>
-        <div class="journal-entry">
-            <img src="journal3.png" alt="Journal Entry 3">
-            <h3>Creative Wedding Decor Ideas</h3>
-            <p>Explore unique decor ideas to make your wedding day unforgettable.</p>
-            <a href="/Journal/entry3" class="btn-readmore">Read More</a>
-        </div>
+        <h2>Helpful notes for the road to “I do.”</h2>
+
+        <p class="home-blog-introduction">
+            Wedding inspiration, thoughtful planning advice and
+            meaningful ideas for your celebration.
+        </p>
     </div>
 
-    
+    <?php if (!empty($latestPosts)): ?>
+        <div class="home-blog-grid">
+            <?php foreach ($latestPosts as $index => $post): ?>
+                <?php
+                    $readTime = homeBlogReadTime(
+                        $post['content']
+                    );
 
+                    $cardNumber = str_pad(
+                        (string) ($index + 1),
+                        2,
+                        '0',
+                        STR_PAD_LEFT
+                    );
+                ?>
+
+                <article class="home-blog-card">
+                    <a
+                        href="post.php?id=<?= (int) $post['blogID'] ?>"
+                        class="home-blog-image-link"
+                        aria-label="Read <?= homeEscape($post['title']) ?>"
+                    >
+                        <div
+                            class="home-blog-image
+                                   home-blog-image-<?= $index + 1 ?>"
+                        >
+                            <?php if (!empty($post['blog_image'])): ?>
+                                <img
+                                    src="<?= homeEscape(
+                                        $post['blog_image']
+                                    ) ?>"
+                                    alt="<?= homeEscape(
+                                        $post['title']
+                                    ) ?>"
+                                >
+                            <?php else: ?>
+                                <div
+                                    class="decorative-arch"
+                                    aria-hidden="true"
+                                ></div>
+                            <?php endif; ?>
+
+                            <span class="image-category">
+                                Journal
+                            </span>
+
+                            <span
+                                class="card-number"
+                                aria-hidden="true"
+                            >
+                                <?= $cardNumber ?>
+                            </span>
+                        </div>
+                    </a>
+
+                    <div class="home-blog-meta">
+                        <span>Journal</span>
+
+                        <span>
+                            <?= $readTime ?> min read
+                        </span>
+                    </div>
+
+                    <h3>
+                        <a
+                            href="post.php?id=<?= (int) $post['blogID'] ?>"
+                        >
+                            <?= homeEscape($post['title']) ?>
+                        </a>
+                    </h3>
+
+                    <p class="home-blog-excerpt">
+                        <?= homeEscape(
+                            homeBlogExcerpt($post['content'])
+                        ) ?>
+                    </p>
+
+                    <a
+                        href="post.php?id=<?= (int) $post['blogID'] ?>"
+                        class="home-blog-read"
+                    >
+                        Read article
+                        <span aria-hidden="true">↗</span>
+                    </a>
+                </article>
+            <?php endforeach; ?>
+        </div>
+
+        <div class="all-posts-container">
+            <a href="blogposts.php" class="all-posts-button">
+                View All Blog Posts
+            </a>
+        </div>
+    <?php else: ?>
+        <div class="home-blog-empty">
+            <h3>No blog posts yet</h3>
+
+            <p>
+                Our latest wedding planning articles will appear here.
+            </p>
+        </div>
+    <?php endif; ?>
 </section>
 
-<footer class="site-footer">
-    <div class="footer-content">
-        <div class="footer-column">
-            <h3>The Love Story Planner</h3>
-            <p>Creating beautiful weddings with care, creativity, and attention to every detail.</p>
-        </div>
-        <div class="footer-column">
-            <h3>Contact</h3>
-            <p>Email: hello@lovestoryplanner.com</p>
-            <p>Phone: (555) 123-4567</p>
-        </div>
-        <div class="footer-column">
-            <h3>Follow Us</h3>
-            <p>Instagram | Pinterest | Facebook</p>
-        </div>
-    </div>
-    <p class="footer-note">© 2026 The Love Story Planner. All Rights Reserved.</p>
-</footer>
+<?php include __DIR__ . '/includes/site-footer.php'; ?>
+
 </body>
 </html>
