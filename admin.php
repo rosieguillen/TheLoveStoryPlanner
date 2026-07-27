@@ -55,6 +55,24 @@ function adminEscape(?string $value): string
                 </div>
                 <span class="card-link">Manage Posts <span aria-hidden="true">→</span></span>
             </a>
+
+            <a href="manageusers.php" class="admin-card">
+                <span class="card-number" aria-hidden="true">03</span>
+                <div>
+                    <h2>Manage Users</h2>
+                    <p>View, add, update or delete registered user accounts.</p>
+                </div>
+                <span class="card-link">Manage Users <span aria-hidden="true">→</span></span>
+            </a>
+
+            <a href="managecomments.php" class="admin-card">
+                <span class="card-number" aria-hidden="true">04</span>
+                <div>
+                    <h2>Moderate Comments</h2>
+                    <p>Review visitor comments and remove inappropriate submissions.</p>
+                </div>
+                <span class="card-link">Moderate Comments <span aria-hidden="true">→</span></span>
+            </a>
         </section>
 
         <div class="admin-footer-actions">

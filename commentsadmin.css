@@ -1,0 +1,177 @@
+:root {
+    --pink: #f993b2;
+    --pink-dark: #d96f91;
+    --pink-soft: #fff2f6;
+    --charcoal: #444142;
+    --body-text: #706b6d;
+    --border: #efd8df;
+    --white: #ffffff;
+    --error: #9b2525;
+}
+
+* { box-sizing: border-box; }
+
+body {
+    min-height: 100vh;
+    margin: 0;
+    color: var(--charcoal);
+    font-family: "Elms Sans", sans-serif;
+    background: #fffafa;
+}
+
+.moderation-page {
+    width: min(1050px, calc(100% - 40px));
+    min-height: 72vh;
+    margin: 0 auto;
+    padding: 72px 0 95px;
+}
+
+.moderation-header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 28px;
+    margin-bottom: 34px;
+}
+
+.moderation-label {
+    margin: 0 0 10px;
+    color: var(--pink-dark);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.17em;
+    text-transform: uppercase;
+}
+
+.moderation-header h1 {
+    margin: 0 0 14px;
+    font-size: clamp(38px, 5vw, 58px);
+    line-height: 1.08;
+}
+
+.moderation-header p:last-child {
+    max-width: 680px;
+    margin: 0;
+    color: var(--body-text);
+    font-size: 16px;
+    line-height: 1.7;
+}
+
+.secondary-button,
+.delete-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 11px 17px;
+    border-radius: 8px;
+    font: inherit;
+    font-weight: 700;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.secondary-button {
+    border: 1px solid var(--border);
+    background: var(--white);
+    color: var(--charcoal);
+}
+
+.secondary-button:hover { border-color: var(--pink); color: var(--pink-dark); }
+
+.delete-button {
+    border: 1px solid #e5a7a7;
+    background: var(--white);
+    color: var(--error);
+    white-space: nowrap;
+}
+
+.delete-button:hover { background: var(--error); color: var(--white); }
+
+.moderation-success,
+.moderation-error {
+    margin-bottom: 24px;
+    padding: 13px 16px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.moderation-success { border: 1px solid #9dc9ad; background: #effaf3; color: #28623d; }
+.moderation-error { border: 1px solid #e7a2a2; background: #fff0f0; color: var(--error); }
+
+.moderation-card {
+    overflow: hidden;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    background: var(--white);
+    box-shadow: 0 15px 38px rgba(68, 65, 66, 0.09);
+}
+
+.moderation-card-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    padding: 24px 28px;
+    border-bottom: 1px solid var(--border);
+    background: var(--pink-soft);
+}
+
+.moderation-card-heading h2 { margin: 0; font-size: 25px; }
+.moderation-card-heading span { color: var(--body-text); font-size: 14px; }
+
+.moderation-list { padding: 0 28px; }
+
+.moderation-comment {
+    display: grid;
+    align-items: center;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 28px;
+    padding: 28px 0;
+    border-bottom: 1px solid var(--border);
+}
+
+.moderation-comment:last-child { border-bottom: 0; }
+
+.comment-meta {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 9px 12px;
+}
+
+.comment-meta strong { font-size: 17px; }
+.comment-meta time { color: #918b8d; font-size: 12px; }
+
+.visitor-badge {
+    padding: 4px 8px;
+    border-radius: 999px;
+    background: var(--pink-soft);
+    color: var(--pink-dark);
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.comment-text {
+    margin: 13px 0;
+    color: var(--body-text);
+    line-height: 1.7;
+    overflow-wrap: break-word;
+}
+
+.comment-post { margin: 0; color: #918b8d; font-size: 13px; }
+.comment-post a { color: var(--pink-dark); font-weight: 700; text-decoration: none; }
+.comment-post a:hover { text-decoration: underline; }
+
+.moderation-empty { padding: 55px 25px; text-align: center; }
+.moderation-empty h3 { margin: 0 0 8px; font-size: 24px; }
+.moderation-empty p { margin: 0; color: var(--body-text); }
+
+@media (max-width: 700px) {
+    .moderation-page { width: min(100% - 24px, 1050px); padding: 48px 0 70px; }
+    .moderation-header { align-items: stretch; flex-direction: column; }
+    .moderation-header .secondary-button { width: 100%; }
+    .moderation-list { padding: 0 18px; }
+    .moderation-comment { align-items: stretch; grid-template-columns: 1fr; gap: 18px; }
+    .delete-button { width: 100%; }
+}

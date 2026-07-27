@@ -56,6 +56,25 @@ ALTER TABLE `blogspots`
 --
 ALTER TABLE `blogspots`
   MODIFY `blogID` int(50) NOT NULL AUTO_INCREMENT;
+
+--
+-- Table structure for table `comments`
+-- PageID stores the related blogspots.blogID value.
+--
+
+CREATE TABLE `comments` (
+  `comment_id` int(50) NOT NULL AUTO_INCREMENT,
+  `comment_text` varchar(1200) NOT NULL,
+  `commenter_name` varchar(60) NOT NULL,
+  `timestamp_comment` timestamp NOT NULL DEFAULT current_timestamp(),
+  `UserID` int(50) DEFAULT NULL,
+  `PageID` int(50) NOT NULL,
+  PRIMARY KEY (`comment_id`),
+  KEY `idx_comments_PageID` (`PageID`),
+  CONSTRAINT `fk_comments_blogpost`
+    FOREIGN KEY (`PageID`) REFERENCES `blogspots` (`blogID`)
+    ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

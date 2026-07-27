@@ -7,6 +7,8 @@ require_once __DIR__ . '/connect.php';
 $error = '';
 $post = false;
 $imagePath = null;
+$commentError = '';
+$comments = [];
 
 /*
  * Escape content before displaying it in HTML.
@@ -53,10 +55,64 @@ if (
     exit;
 }
 
+$isCommentSubmission =
+    $_SERVER['REQUEST_METHOD'] === 'POST' &&
+    ($_POST['action'] ?? '') === 'add_comment';
+
+/*
+ * ADD A PUBLIC VISITOR COMMENT
+ */
+if ($isCommentSubmission) {
+    $commentPostId = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
+    $submittedToken = $_POST['csrf_token'] ?? '';
+    $commenterName = trim($_POST['commenter_name'] ?? '');
+    $commentText = trim($_POST['comment_text'] ?? '');
+
+    if (!$commentPostId || $commentPostId < 1) {
+        $commentError = 'The selected blog post is invalid.';
+    } elseif (!hash_equals($_SESSION['csrf_token'], $submittedToken)) {
+        $commentError = 'Your session expired. Refresh the page and try again.';
+    } elseif ($commenterName === '') {
+        $commentError = 'Enter your name before posting a comment.';
+    } elseif (mb_strlen($commenterName) > 60) {
+        $commentError = 'Your name must be 60 characters or fewer.';
+    } elseif ($commentText === '') {
+        $commentError = 'Enter a comment before submitting.';
+    } elseif (mb_strlen($commentText) > 1200) {
+        $commentError = 'Your comment must be 1,200 characters or fewer.';
+    } else {
+        $statement = $db->prepare(
+            'INSERT INTO comments
+                (comment_text, commenter_name, UserID, PageID)
+             SELECT :comment_text, :commenter_name, NULL, blogID
+             FROM blogspots
+             WHERE blogID = :blogID'
+        );
+
+        $statement->execute([
+            ':comment_text' => $commentText,
+            ':commenter_name' => $commenterName,
+            ':blogID' => $commentPostId
+        ]);
+
+        if ($statement->rowCount() === 1) {
+            $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+            header(
+                'Location: post.php?id=' .
+                urlencode((string) $commentPostId) .
+                '&comment=posted#comments'
+            );
+            exit;
+        }
+
+        $commentError = 'That blog post could not be found.';
+    }
+}
+
 /*
  * CREATE A NEW POST
  */
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && !$isCommentSubmission) {
     if (empty($_SESSION['admin_logged_in'])) {
         header('Location: authenticate.php');
         exit;
@@ -324,6 +380,19 @@ if (isset($_GET['id'])) {
         header('Location: blogposts.php');
         exit;
     }
+
+    $commentStatement = $db->prepare(
+        'SELECT
+            comment_id,
+            commenter_name,
+            comment_text,
+            timestamp_comment
+         FROM comments
+         WHERE PageID = :blogID
+         ORDER BY timestamp_comment ASC, comment_id ASC'
+    );
+    $commentStatement->execute([':blogID' => $postId]);
+    $comments = $commentStatement->fetchAll(PDO::FETCH_ASSOC);
 }
 
 ?>
@@ -353,7 +422,7 @@ if (isset($_GET['id'])) {
         rel="stylesheet"
     >
 
-    <link rel="stylesheet" href="post.css">
+    <link rel="stylesheet" href="post.css?v=20260724-1">
 </head>
 
 <body>
@@ -434,6 +503,92 @@ if (isset($_GET['id'])) {
                     </a>
                 </footer>
             </article>
+
+            <section class="comments-section" id="comments" aria-labelledby="comments-heading">
+                <header class="comments-heading">
+                    <div>
+                        <p class="page-label">Join the Conversation</p>
+                        <h2 id="comments-heading">
+                            Comments <span>(<?= count($comments) ?>)</span>
+                        </h2>
+                    </div>
+                </header>
+
+                <?php if (($_GET['comment'] ?? '') === 'posted'): ?>
+                    <div class="comment-success" role="status">
+                        Your comment was posted successfully.
+                    </div>
+                <?php endif; ?>
+
+                <?php if ($commentError !== ''): ?>
+                    <div class="comment-error" role="alert">
+                        <?= escape($commentError) ?>
+                    </div>
+                <?php endif; ?>
+
+                <?php if ($comments): ?>
+                    <ol class="comments-list">
+                        <?php foreach ($comments as $comment): ?>
+                            <li class="comment-card">
+                                <div class="comment-avatar" aria-hidden="true">
+                                    <?= escape(mb_strtoupper(mb_substr($comment['commenter_name'], 0, 1))) ?>
+                                </div>
+
+                                <div class="comment-body">
+                                    <div class="comment-meta">
+                                        <strong><?= escape($comment['commenter_name']) ?></strong>
+                                        <time datetime="<?= escape($comment['timestamp_comment']) ?>">
+                                            <?= escape(formatPostDate($comment['timestamp_comment'])) ?>
+                                        </time>
+                                    </div>
+
+                                    <p><?= nl2br(escape($comment['comment_text'])) ?></p>
+                                </div>
+                            </li>
+                        <?php endforeach; ?>
+                    </ol>
+                <?php else: ?>
+                    <p class="no-comments">
+                        No comments yet. Be the first to join the conversation.
+                    </p>
+                <?php endif; ?>
+
+                <div class="comment-form-card">
+                    <h3>Leave a Comment</h3>
+                    <p>Your name and comment will be displayed publicly.</p>
+
+                    <form method="post" action="post.php?id=<?= (int) $post['blogID'] ?>#comments" class="comment-form">
+                        <input type="hidden" name="action" value="add_comment">
+                        <input type="hidden" name="csrf_token" value="<?= escape($_SESSION['csrf_token']) ?>">
+
+                        <div class="comment-field">
+                            <label for="commenter_name">Your name</label>
+                            <input
+                                id="commenter_name"
+                                name="commenter_name"
+                                type="text"
+                                maxlength="60"
+                                value="<?= escape($_POST['commenter_name'] ?? '') ?>"
+                                autocomplete="name"
+                                required
+                            >
+                        </div>
+
+                        <div class="comment-field">
+                            <label for="comment_text">Comment</label>
+                            <textarea
+                                id="comment_text"
+                                name="comment_text"
+                                rows="6"
+                                maxlength="1200"
+                                required
+                            ><?= escape($_POST['comment_text'] ?? '') ?></textarea>
+                        </div>
+
+                        <button type="submit" class="comment-submit">Post Comment</button>
+                    </form>
+                </div>
+            </section>
         <?php else: ?>
             <section class="post-form-section">
                 <div class="form-introduction">

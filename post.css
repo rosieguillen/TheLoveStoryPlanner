@@ -637,3 +637,219 @@ textarea {
         padding: 15px 16px;
     }
 }
+
+/* Public blog comments */
+.comments-section {
+    margin-top: 34px;
+    padding: 44px 48px 50px;
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    background: var(--white);
+    box-shadow: 0 14px 36px rgba(68, 65, 66, 0.09);
+}
+
+.comments-heading {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 20px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid var(--border);
+}
+
+.comments-heading h2 {
+    margin: 0;
+    color: var(--charcoal);
+    font-size: clamp(30px, 4vw, 40px);
+}
+
+.comments-heading h2 span {
+    color: var(--pink-dark);
+    font-size: 0.55em;
+    vertical-align: middle;
+}
+
+.comment-success,
+.comment-error {
+    margin-top: 24px;
+    padding: 13px 16px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.comment-success {
+    border: 1px solid #9dc9ad;
+    background: #effaf3;
+    color: #28623d;
+}
+
+.comment-error {
+    border: 1px solid #e7a2a2;
+    background: #fff0f0;
+    color: var(--error);
+}
+
+.comments-list {
+    display: grid;
+    gap: 18px;
+    margin: 28px 0 0;
+    padding: 0;
+    list-style: none;
+}
+
+.comment-card {
+    display: grid;
+    grid-template-columns: 46px minmax(0, 1fr);
+    gap: 16px;
+    padding: 20px;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: #fffafb;
+}
+
+.comment-avatar {
+    display: grid;
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    background: var(--pink-soft);
+    color: var(--pink-dark);
+    font-size: 18px;
+    font-weight: 700;
+    place-items: center;
+}
+
+.comment-meta {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 14px;
+}
+
+.comment-meta strong {
+    color: var(--charcoal);
+}
+
+.comment-meta time {
+    color: #918b8d;
+    font-size: 12px;
+}
+
+.comment-body p {
+    margin: 9px 0 0;
+    color: var(--body-text);
+    line-height: 1.7;
+    overflow-wrap: break-word;
+}
+
+.no-comments {
+    margin: 28px 0 0;
+    padding: 20px;
+    border-radius: 10px;
+    background: var(--pink-soft);
+    color: var(--body-text);
+    text-align: center;
+}
+
+.comment-form-card {
+    margin-top: 34px;
+    padding: 30px;
+    border-radius: 14px;
+    background: var(--pink-soft);
+}
+
+.comment-form-card h3 {
+    margin: 0 0 7px;
+    color: var(--charcoal);
+    font-size: 25px;
+}
+
+.comment-form-card > p {
+    margin: 0 0 24px;
+    color: var(--body-text);
+    font-size: 14px;
+}
+
+.comment-form {
+    display: grid;
+    gap: 20px;
+}
+
+.comment-field label {
+    display: block;
+    margin-bottom: 8px;
+    color: var(--charcoal);
+    font-weight: 700;
+}
+
+.comment-field input,
+.comment-field textarea {
+    display: block;
+    width: 100%;
+    padding: 13px 14px;
+    border: 1px solid #d6d1d3;
+    border-radius: 8px;
+    background: var(--white);
+    color: var(--charcoal);
+}
+
+.comment-field textarea {
+    min-height: 135px;
+    line-height: 1.6;
+    resize: vertical;
+}
+
+.comment-field input:focus,
+.comment-field textarea:focus {
+    border-color: var(--pink);
+    outline: none;
+    box-shadow: 0 0 0 4px rgba(249, 147, 178, 0.2);
+}
+
+.comment-submit {
+    justify-self: start;
+    padding: 13px 22px;
+    border: 2px solid var(--pink);
+    border-radius: 8px;
+    background: var(--pink);
+    color: var(--white);
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.comment-submit:hover {
+    border-color: var(--charcoal);
+    background: var(--charcoal);
+}
+
+@media (max-width: 650px) {
+    .comments-section {
+        padding: 34px 20px 38px;
+    }
+
+    .comment-card {
+        grid-template-columns: 38px minmax(0, 1fr);
+        padding: 16px;
+    }
+
+    .comment-avatar {
+        width: 38px;
+        height: 38px;
+        font-size: 15px;
+    }
+
+    .comment-meta {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 3px;
+    }
+
+    .comment-form-card {
+        padding: 24px 18px;
+    }
+
+    .comment-submit {
+        width: 100%;
+    }
+}

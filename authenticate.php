@@ -19,6 +19,14 @@ if (
     exit;
 }
 
+if (
+    !empty($_SESSION['user_logged_in']) &&
+    !empty($_SESSION['user_id'])
+) {
+    header('Location: HomePage.php');
+    exit;
+}
+
 /*
  * Process the login form.
  */
@@ -35,7 +43,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             SELECT
                 UserID,
                 Username,
-                Password
+                Password,
+                Role
             FROM USERS
             WHERE Username = :username
             LIMIT 1
@@ -60,19 +69,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         ) {
             session_regenerate_id(true);
 
-            /*
-             * Store the signed-in administrator's information.
-             * user_id becomes blogposts.author_id.
-             */
-            $_SESSION['admin_logged_in'] = true;
+            unset(
+                $_SESSION['admin_logged_in'],
+                $_SESSION['user_logged_in'],
+                $_SESSION['admin_username']
+            );
 
-            $_SESSION['user_id'] =
-                (int) $user['UserID'];
+            $_SESSION['user_id'] = (int) $user['UserID'];
+            $_SESSION['account_username'] = $user['Username'];
+            $_SESSION['account_role'] = $user['Role'];
 
-            $_SESSION['admin_username'] =
-                $user['Username'];
+            if ($user['Role'] === 'admin') {
+                $_SESSION['admin_logged_in'] = true;
+                $_SESSION['admin_username'] = $user['Username'];
+                header('Location: admin.php');
+            } else {
+                $_SESSION['user_logged_in'] = true;
+                header('Location: HomePage.php');
+            }
 
-            header('Location: admin.php');
             exit;
         }
 
@@ -105,7 +120,7 @@ function escapeLogin(?string $value): string
     >
 
     <title>
-        Admin Sign In | The Love Story Planner
+        Account Sign In | The Love Story Planner
     </title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -132,14 +147,20 @@ function escapeLogin(?string $value): string
             </div>
 
             <p class="login-label">
-                Administrator Area
+                Member &amp; Admin Area
             </p>
 
             <h1>Welcome Back</h1>
 
             <p class="login-intro">
-                Sign in to create and manage blog posts.
+                Sign in securely to access your account.
             </p>
+
+            <?php if (($_GET['registered'] ?? '') === '1'): ?>
+                <div class="login-success" role="status">
+                    Your account was created. You can sign in now.
+                </div>
+            <?php endif; ?>
 
             <?php if ($error !== ''): ?>
                 <div
@@ -206,6 +227,10 @@ function escapeLogin(?string $value): string
                     Sign In
                 </button>
             </form>
+
+            <a href="register.php" class="return-link">
+                New visitor? Create an account
+            </a>
 
             <a
                 href="HomePage.php"
