@@ -27,7 +27,7 @@ reaching out for anything in between. Getting in touch is easy, and we'd love to
     <package>
         <h2>Contact Information</h2>
         <p>Email: <a href="mailto:info@thelovestoryplanner.com">info@thelovestoryplanner.com</a></p>
-        <p>Phone: <a href="tel:+1234567890">+1 (555) 123-4567</a></p>
+        <p>Phone: +1 (555) 123-4567</p>
         <p>Address: 123 Wedding Lane, Love City, LC 12345</p>
         <p>Business Hours: Monday - Friday, 9:00 AM - 5:00 PM</p>
         <p> Social Media: 
