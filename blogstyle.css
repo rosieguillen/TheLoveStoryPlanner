@@ -232,41 +232,6 @@ body {
     color: var(--white);
 }
 
-/* Pink buttons */
-
-.new-post-button {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    padding: 14px 26px;
-    border: 2px solid var(--pink);
-    border-radius: 9px;
-    background-color: var(--pink);
-    color: var(--white);
-    font-size: 16px;
-    font-weight: 700;
-    text-decoration: none;
-    cursor: pointer;
-    transition:
-        background-color 0.2s ease,
-        border-color 0.2s ease,
-        transform 0.2s ease,
-        box-shadow 0.2s ease;
-}
-
-.new-post-button:hover {
-    border-color: var(--charcoal);
-    background-color: var(--charcoal);
-    box-shadow: 0 8px 18px rgba(68, 65, 66, 0.2);
-    transform: translateY(-2px);
-}
-
-.new-post-button:focus-visible,
-.read-link:focus-visible,
-.edit-link:focus-visible {
-    outline: 3px solid var(--charcoal);
-    outline-offset: 3px;
-}
 
 /* Empty journal */
 

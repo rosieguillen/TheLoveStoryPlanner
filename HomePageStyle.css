@@ -26,41 +26,6 @@ body {
     border-radius: 0;
 }
 
-.btn-quote {
-    position: absolute;
-    left: 30%;
-    top: 24%;
-    transform: translate(-50%, -50%);
-
-    display: inline-block;
-    padding: 14px 30px;
-
-    background-color: #f993b2;
-    border-radius: 8px;
-
-    font-family: "Elms Sans", sans-serif;
-    font-size: 18px;
-    font-weight: 700;
-    text-decoration: none;
-    text-align: center;
-    color: white;
-}
-
-.btn-quote:hover {
-    background-color: #f4bece;
-    color: white;
-
-}
-
-.btn-quote:focus-visible {
-    outline: 3px solid white;
-    outline-offset: 3px;
-}
-
-.btn-quote:active {
-    transform: translate(-50%, -50%) scale(0.97);
-}
-
 .about {
     padding: 96px 48px;
     background: #fffafa;

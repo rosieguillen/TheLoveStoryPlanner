@@ -76,13 +76,6 @@ function homeEscape(?string $value): string
         >
     </div>
 
-<button
-    type="button"
-    class="btn-quote"
-    onclick="document.querySelector('#quote-form').scrollIntoView({behavior: 'smooth' })">
-    PLAN YOUR LOVE STORY WITH US
-</button>
-
 
 <section class="about" id="about">
     <div class="about-content">

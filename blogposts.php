@@ -75,9 +75,6 @@ function createExcerpt($content, $length = 220)
             meaningful, beautiful and completely your own.
         </p>
 
-        <a href="post.php" class="new-post-button">
-            Create New Post
-        </a>
     </header>
 
     <main class="blog-main">
