@@ -40,6 +40,20 @@ body {
     font-size: 14px;
     color: #a5a4a4;
 }
+
+.footer-column a {
+    color: #444142;
+    text-decoration: none;
+
+}
+
+.footer-column a:hover {
+        color: #d96f91;
+        text-decoration: underline;
+        text-decoration-thickness: 3px;
+        text-underline-offset: 8px;
+    }
+
 </style>
 
 <footer class="site-footer">
@@ -55,8 +69,11 @@ body {
         </div>
         <div class="footer-column">
             <h3>Follow Us</h3>
-            <p>Instagram | Pinterest | Facebook</p>
+            <p><a href="https://instagram.com" target="_blank">Instagram</a></p>
+            <p><a href="https://facebook.com" target="_blank">Facebook</a> </p>
+            <p><a href="https://pinterest.com" target="_blank">Pinterest</a></p>
         </div>
     </div>
     <p class="footer-note">© 2026 The Love Story Planner. All Rights Reserved.</p>
+    <p class="footer-note"> Images generated with ChatGPT by OpenAI, July 2026.</p>
 </footer>
