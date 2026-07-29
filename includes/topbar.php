@@ -88,7 +88,7 @@
     <a href="HomePage.php">Home</a>
     <a href="HomePage.php#about">About Us</a>
     <a href="blogposts.php">Blog</a>
-    <a href="">Contact</a>
+    <a href="contact.php">Contact</a>
     <a href="HomePage.php#services">Services</a>
     <a href="authenticate.php">Admin Area</a>
 </nav>
