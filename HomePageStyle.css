@@ -223,7 +223,15 @@ body {
 .home-blog {
     padding: 95px 28px;
     color: #26352f;
+    font-family: "Elms Sans", sans-serif;
     background-color: #fbfaf7;
+}
+
+.home-blog button,
+.home-blog input,
+.home-blog textarea,
+.home-blog select {
+    font: inherit;
 }
 
 .home-blog-heading {
@@ -244,10 +252,11 @@ body {
 .home-blog-heading h2 {
     margin: 0 0 16px;
     color: #26352f;
-    font-family: Georgia, "Times New Roman", serif;
+    font-family: "Elms Sans", sans-serif;
     font-size: clamp(38px, 5vw, 58px);
-    font-weight: 400;
+    font-weight: 700;
     line-height: 1.12;
+    letter-spacing: -0.02em;
 }
 
 .home-blog-introduction {
@@ -360,8 +369,9 @@ body {
     bottom: 8px;
     z-index: 2;
     color: rgba(255, 255, 255, 0.63);
-    font-family: Georgia, "Times New Roman", serif;
+    font-family: "Elms Sans", sans-serif;
     font-size: clamp(48px, 5vw, 67px);
+    font-weight: 600;
 }
 
 /* Decorative fallback when a post has no image */
@@ -394,10 +404,11 @@ body {
 
 .home-blog-card h3 {
     margin: 0 0 10px;
-    font-family: Georgia, "Times New Roman", serif;
+    font-family: "Elms Sans", sans-serif;
     font-size: clamp(25px, 2.2vw, 33px);
-    font-weight: 400;
+    font-weight: 600;
     line-height: 1.2;
+    letter-spacing: -0.01em;
 }
 
 .home-blog-card h3 a {
@@ -468,9 +479,9 @@ body {
 
 .home-blog-empty h3 {
     margin: 0 0 10px;
-    font-family: Georgia, "Times New Roman", serif;
+    font-family: "Elms Sans", sans-serif;
     font-size: 30px;
-    font-weight: 400;
+    font-weight: 600;
 }
 
 .home-blog-empty p {
