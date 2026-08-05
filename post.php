@@ -68,6 +68,12 @@ if ($isCommentSubmission) {
     $submittedToken = $_POST['csrf_token'] ?? '';
     $commenterName = sanitizePlainText($_POST['commenter_name'] ?? '');
     $commentText = sanitizePlainText($_POST['comment_text'] ?? '');
+    $captchaAnswer = strtoupper(sanitizePlainText($_POST['captcha_answer'] ?? ''));
+    $expectedCaptcha = $_SESSION['comment_captcha'] ?? '';
+    $captchaCreatedAt = (int) ($_SESSION['comment_captcha_created_at'] ?? 0);
+
+    // A CAPTCHA is single-use, whether the answer succeeds or fails.
+    unset($_SESSION['comment_captcha'], $_SESSION['comment_captcha_created_at']);
 
     if ($commentPostId === null) {
         $commentError = 'The selected blog post is invalid.';
@@ -85,6 +91,14 @@ if ($isCommentSubmission) {
         $commentError = 'Your comment must be 1,200 characters or fewer.';
     } elseif (containsInvalidControlCharacters($commentText)) {
         $commentError = 'Your comment contains invalid characters.';
+    } elseif ($captchaAnswer === '') {
+        $commentError = 'Enter the verification code shown in the image.';
+    } elseif (
+        $expectedCaptcha === '' ||
+        $captchaCreatedAt < time() - 900 ||
+        !hash_equals($expectedCaptcha, $captchaAnswer)
+    ) {
+        $commentError = 'The verification code was incorrect. Please try the new code below.';
     } else {
         $statement = $db->prepare(
             'INSERT INTO comments
@@ -600,9 +614,54 @@ if (isset($_GET['id'])) {
                             ><?= escape($_POST['comment_text'] ?? '') ?></textarea>
                         </div>
 
+                        <div class="comment-field captcha-field">
+                            <label for="captcha_answer">Human verification</label>
+                            <p class="captcha-instructions">Enter the five-character code shown below.</p>
+
+                            <div class="captcha-row">
+                                <img
+                                    id="comment-captcha-image"
+                                    src="captcha.php"
+                                    alt="CAPTCHA verification code"
+                                    width="210"
+                                    height="62"
+                                >
+
+                                <button type="button" id="refresh-captcha" class="captcha-refresh">
+                                    New code
+                                </button>
+                            </div>
+
+                            <input
+                                id="captcha_answer"
+                                name="captcha_answer"
+                                type="text"
+                                maxlength="5"
+                                minlength="5"
+                                pattern="[A-Za-z0-9]{5}"
+                                autocomplete="off"
+                                autocapitalize="characters"
+                                aria-describedby="captcha-help"
+                                required
+                            >
+                            <p id="captcha-help" class="captcha-help">The code is not case-sensitive.</p>
+                        </div>
+
                         <button type="submit" class="comment-submit">Post Comment</button>
                     </form>
                 </div>
+
+                <script>
+                    const captchaImage = document.querySelector('#comment-captcha-image');
+                    const captchaRefresh = document.querySelector('#refresh-captcha');
+                    const captchaAnswer = document.querySelector('#captcha_answer');
+
+                    captchaRefresh?.addEventListener('click', () => {
+                        captchaImage.src = `captcha.php?refresh=${Date.now()}`;
+                        captchaAnswer.value = '';
+                        captchaAnswer.focus();
+                    });
+                </script>
             </section>
         <?php else: ?>
             <section class="post-form-section">
