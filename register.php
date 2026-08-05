@@ -3,6 +3,7 @@
 session_start();
 
 require_once __DIR__ . '/connect.php';
+require_once __DIR__ . '/includes/validation.php';
 
 $error = '';
 $username = '';
@@ -12,7 +13,7 @@ if (empty($_SESSION['registration_csrf_token'])) {
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $username = trim($_POST['username'] ?? '');
+    $username = sanitizePlainText($_POST['username'] ?? '');
     $password = $_POST['password'] ?? '';
     $confirmPassword = $_POST['confirm_password'] ?? '';
     $submittedToken = $_POST['csrf_token'] ?? '';
@@ -23,6 +24,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $error = 'Enter a username or email address.';
     } elseif (mb_strlen($username) > 50) {
         $error = 'Your username must be 50 characters or fewer.';
+    } elseif (containsInvalidControlCharacters($username)) {
+        $error = 'Your username contains invalid characters.';
     } elseif (mb_strlen($password) < 8) {
         $error = 'Your password must contain at least 8 characters.';
     } elseif ($password !== $confirmPassword) {

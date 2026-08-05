@@ -3,6 +3,7 @@
 session_start();
 
 require_once __DIR__ . '/connect.php';
+require_once __DIR__ . '/includes/validation.php';
 
 if (empty($_SESSION['admin_logged_in']) || empty($_SESSION['user_id'])) {
     header('Location: authenticate.php');
@@ -19,15 +20,15 @@ function escapeEdit(?string $value): string
 }
 
 $error = '';
-$postId = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
+$postId = positiveInputId(INPUT_GET, 'id');
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $postId = filter_input(INPUT_POST, 'id', FILTER_VALIDATE_INT);
+    $postId = positiveInputId(INPUT_POST, 'id');
     $submittedToken = $_POST['csrf_token'] ?? '';
 
     if (!hash_equals($_SESSION['csrf_token'], $submittedToken)) {
         $error = 'Your session expired. Refresh the page and try again.';
-    } elseif (!$postId || $postId < 1) {
+    } elseif ($postId === null) {
         $error = 'The selected post is invalid.';
     } elseif (isset($_POST['delete'])) {
         $statement = $db->prepare(
@@ -58,8 +59,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         header('Location: blogposts.php');
         exit;
     } elseif (isset($_POST['update'])) {
-        $title = trim($_POST['title'] ?? '');
-        $content = trim($_POST['content'] ?? '');
+        $title = sanitizePlainText($_POST['title'] ?? '');
+        $content = sanitizePlainText($_POST['content'] ?? '');
 
         if ($title === '' || $content === '') {
             $error = 'Title and content are required.';
@@ -67,6 +68,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $error = 'The title must be 50 characters or fewer.';
         } elseif (mb_strlen($content) > 1200) {
             $error = 'The content must be 1,200 characters or fewer.';
+        } elseif (containsInvalidControlCharacters($title)) {
+            $error = 'The title contains invalid characters.';
+        } elseif (containsInvalidControlCharacters($content)) {
+            $error = 'The content contains invalid characters.';
         } else {
             $statement = $db->prepare(
                 'UPDATE blogspots
@@ -86,7 +91,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-if (!$postId || $postId < 1) {
+if ($postId === null) {
     header('Location: blogposts.php');
     exit;
 }

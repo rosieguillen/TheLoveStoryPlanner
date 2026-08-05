@@ -3,6 +3,7 @@
 session_start();
 
 require_once __DIR__ . '/connect.php';
+require_once __DIR__ . '/includes/validation.php';
 
 $error = '';
 $post = false;
@@ -63,12 +64,12 @@ $isCommentSubmission =
  * ADD A PUBLIC VISITOR COMMENT
  */
 if ($isCommentSubmission) {
-    $commentPostId = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
+    $commentPostId = positiveInputId(INPUT_GET, 'id');
     $submittedToken = $_POST['csrf_token'] ?? '';
-    $commenterName = trim($_POST['commenter_name'] ?? '');
-    $commentText = trim($_POST['comment_text'] ?? '');
+    $commenterName = sanitizePlainText($_POST['commenter_name'] ?? '');
+    $commentText = sanitizePlainText($_POST['comment_text'] ?? '');
 
-    if (!$commentPostId || $commentPostId < 1) {
+    if ($commentPostId === null) {
         $commentError = 'The selected blog post is invalid.';
     } elseif (!hash_equals($_SESSION['csrf_token'], $submittedToken)) {
         $commentError = 'Your session expired. Refresh the page and try again.';
@@ -76,10 +77,14 @@ if ($isCommentSubmission) {
         $commentError = 'Enter your name before posting a comment.';
     } elseif (mb_strlen($commenterName) > 60) {
         $commentError = 'Your name must be 60 characters or fewer.';
+    } elseif (containsInvalidControlCharacters($commenterName)) {
+        $commentError = 'Your name contains invalid characters.';
     } elseif ($commentText === '') {
         $commentError = 'Enter a comment before submitting.';
     } elseif (mb_strlen($commentText) > 1200) {
         $commentError = 'Your comment must be 1,200 characters or fewer.';
+    } elseif (containsInvalidControlCharacters($commentText)) {
+        $commentError = 'Your comment contains invalid characters.';
     } else {
         $statement = $db->prepare(
             'INSERT INTO comments
@@ -129,8 +134,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !$isCommentSubmission) {
         $error = 'Your session expired. Refresh the page and try again.';
     }
 
-    $title = trim($_POST['title'] ?? '');
-    $content = trim($_POST['content'] ?? '');
+    $title = sanitizePlainText($_POST['title'] ?? '');
+    $content = sanitizePlainText($_POST['content'] ?? '');
 
     /*
      * This was saved during a successful login:
@@ -142,8 +147,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !$isCommentSubmission) {
         $error = 'A post title is required.';
     }
 
+    if ($error === '' && mb_strlen($title) > 50) {
+        $error = 'The post title must be 50 characters or fewer.';
+    }
+
+    if ($error === '' && containsInvalidControlCharacters($title)) {
+        $error = 'The post title contains invalid characters.';
+    }
+
     if ($error === '' && $content === '') {
         $error = 'Post content is required.';
+    }
+
+    if ($error === '' && mb_strlen($content) > 1200) {
+        $error = 'Post content must be 1,200 characters or fewer.';
+    }
+
+    if ($error === '' && containsInvalidControlCharacters($content)) {
+        $error = 'Post content contains invalid characters.';
     }
 
     if ($error === '' && !$authorId) {
@@ -334,16 +355,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !$isCommentSubmission) {
  * DISPLAY AN EXISTING POST
  */
 if (isset($_GET['id'])) {
-    $postId = filter_input(
-        INPUT_GET,
-        'id',
-        FILTER_VALIDATE_INT
-    );
+    $postId = positiveInputId(INPUT_GET, 'id');
 
     if (
-        $postId === false ||
-        $postId === null ||
-        $postId < 1
+        $postId === null
     ) {
         header('Location: blogposts.php');
         exit;
@@ -640,7 +655,7 @@ if (isset($_GET['id'])) {
                                 $_POST['title'] ?? ''
                             ) ?>"
                             placeholder="Enter a descriptive post title"
-                            maxlength="255"
+                            maxlength="50"
                             required
                         >
 
@@ -658,6 +673,7 @@ if (isset($_GET['id'])) {
                             id="content"
                             name="content"
                             rows="14"
+                            maxlength="1200"
                             placeholder="Write your blog post here..."
                             required
                         ><?= escape(

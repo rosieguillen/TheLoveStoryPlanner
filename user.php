@@ -3,6 +3,7 @@
 session_start();
 
 require_once __DIR__ . '/connect.php';
+require_once __DIR__ . '/includes/validation.php';
 
 if (empty($_SESSION['admin_logged_in']) || empty($_SESSION['user_id'])) {
     header('Location: authenticate.php');
@@ -40,7 +41,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $postedUserId = filter_input(INPUT_POST, 'user_id', FILTER_VALIDATE_INT);
     $isEditing = $postedUserId !== false && $postedUserId !== null && $postedUserId > 0;
     $userId = $isEditing ? $postedUserId : null;
-    $username = trim($_POST['username'] ?? '');
+    $username = sanitizePlainText($_POST['username'] ?? '');
     $password = $_POST['password'] ?? '';
     $role = $_POST['role'] ?? 'user';
 
@@ -50,6 +51,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $error = 'Enter a username or email address.';
     } elseif (mb_strlen($username) > 50) {
         $error = 'The username must be 50 characters or fewer.';
+    } elseif (containsInvalidControlCharacters($username)) {
+        $error = 'The username contains invalid characters.';
     } elseif (!in_array($role, ['user', 'admin'], true)) {
         $error = 'Select a valid account role.';
     } elseif (!$isEditing && mb_strlen($password) < 8) {

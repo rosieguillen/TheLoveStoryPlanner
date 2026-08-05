@@ -3,6 +3,7 @@
 session_start();
 
 require_once __DIR__ . '/connect.php';
+require_once __DIR__ . '/includes/validation.php';
 
 $error = '';
 $username = '';
@@ -31,11 +32,13 @@ if (
  * Process the login form.
  */
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $username = trim($_POST['username'] ?? '');
+    $username = sanitizePlainText($_POST['username'] ?? '');
     $password = $_POST['password'] ?? '';
 
     if ($username === '') {
         $error = 'Enter your username or email address.';
+    } elseif (mb_strlen($username) > 50 || containsInvalidControlCharacters($username)) {
+        $error = 'Enter a valid username or email address.';
     } elseif ($password === '') {
         $error = 'Enter your password.';
     } else {
