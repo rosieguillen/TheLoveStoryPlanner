@@ -419,7 +419,7 @@ if (isset($_GET['id'])) {
             timestamp_comment
          FROM comments
          WHERE PageID = :blogID
-         ORDER BY timestamp_comment ASC, comment_id ASC'
+         ORDER BY timestamp_comment DESC, comment_id DESC'
     );
     $commentStatement->execute([':blogID' => $postId]);
     $comments = $commentStatement->fetchAll(PDO::FETCH_ASSOC);
