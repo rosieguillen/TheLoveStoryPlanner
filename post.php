@@ -4,6 +4,7 @@ session_start();
 
 require_once __DIR__ . '/connect.php';
 require_once __DIR__ . '/includes/validation.php';
+require_once __DIR__ . '/includes/blog-image.php';
 
 $error = '';
 $post = false;
@@ -504,7 +505,7 @@ if (isset($_GET['id'])) {
                     </div>
                 </header>
 
-                <?php if (!empty($post['blog_image'])): ?>
+                <?php if (blogImageExists($post['blog_image'] ?? null)): ?>
                     <img
                         src="<?= escape(
                             $post['blog_image']

@@ -1,5 +1,6 @@
 <?php
 require __DIR__ . '/connect.php';
+require_once __DIR__ . '/includes/blog-image.php';
 
 $query = "
     SELECT
@@ -109,7 +110,7 @@ function createExcerpt($content, $length = 220)
             <div class="posts-grid">
                 <?php foreach ($posts as $post): ?>
                     <article class="post-card">
-                        <?php if (!empty($post['blog_image'])): ?>
+                        <?php if (blogImageExists($post['blog_image'] ?? null)): ?>
                             <a
                                 href="post.php?id=<?= (int) $post['blogID'] ?>"
                                 class="post-image-link"

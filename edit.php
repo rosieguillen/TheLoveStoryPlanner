@@ -4,6 +4,7 @@ session_start();
 
 require_once __DIR__ . '/connect.php';
 require_once __DIR__ . '/includes/validation.php';
+require_once __DIR__ . '/includes/blog-image.php';
 
 if (empty($_SESSION['admin_logged_in']) || empty($_SESSION['user_id'])) {
     header('Location: authenticate.php');
@@ -158,7 +159,7 @@ $content = $_POST['content'] ?? $post['content'];
                     <p class="field-help">Maximum 1,200 characters.</p>
                 </div>
 
-                <?php if (!empty($post['blog_image'])): ?>
+                <?php if (blogImageExists($post['blog_image'] ?? null)): ?>
                     <div class="form-group">
                         <label>Current featured image</label>
                         <img class="edit-current-image" src="<?= escapeEdit($post['blog_image']) ?>" alt="<?= escapeEdit($post['title']) ?>">

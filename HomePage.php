@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__ . '/connect.php';
+require_once __DIR__ . '/includes/blog-image.php';
 
 $latestPostQuery = "
     SELECT
@@ -179,7 +180,7 @@ function homeEscape(?string $value): string
                             class="home-blog-image
                                    home-blog-image-<?= $index + 1 ?>"
                         >
-                            <?php if (!empty($post['blog_image'])): ?>
+                            <?php if (blogImageExists($post['blog_image'] ?? null)): ?>
                                 <img
                                     src="<?= homeEscape(
                                         $post['blog_image']
