@@ -476,6 +476,49 @@ textarea {
     }
 }
 
+.edit-image-group {
+    padding: 20px;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: #fffafb;
+}
+
+.edit-current-image {
+    display: block;
+    width: min(100%, 620px);
+    max-height: 360px;
+    margin-top: 12px;
+    border-radius: 10px;
+    object-fit: cover;
+}
+
+.remove-image-option {
+    display: flex !important;
+    align-items: center;
+    gap: 10px;
+    width: fit-content;
+    margin-top: 16px !important;
+    color: #8f3030 !important;
+    cursor: pointer;
+}
+
+.remove-image-option input {
+    width: 18px;
+    height: 18px;
+    margin: 0;
+    accent-color: #b44343;
+}
+
+.edit-image-input {
+    display: block;
+    width: 100%;
+    padding: 13px;
+    border: 1px solid #d6d1d3;
+    border-radius: 8px;
+    background: #fffafb;
+    color: var(--body-text);
+}
+
 /* Manage Posts admin table */
 .manage-page {
     width: min(1180px, calc(100% - 40px));

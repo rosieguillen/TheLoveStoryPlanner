@@ -48,12 +48,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         );
         $statement->execute([':blogID' => $postId]);
 
-        if (!empty($postToDelete['blog_image'])) {
-            $imageFile = __DIR__ . '/' . $postToDelete['blog_image'];
+        $imageFile = blogImageFilePath($postToDelete['blog_image'] ?? null);
 
-            if (is_file($imageFile)) {
-                unlink($imageFile);
-            }
+        if ($imageFile !== null) {
+            unlink($imageFile);
         }
 
         $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
@@ -62,6 +60,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } elseif (isset($_POST['update'])) {
         $title = sanitizePlainText($_POST['title'] ?? '');
         $content = sanitizePlainText($_POST['content'] ?? '');
+        $removeImage = isset($_POST['remove_image']);
+        $hasNewUpload =
+            isset($_FILES['blog_image']) &&
+            $_FILES['blog_image']['error'] !== UPLOAD_ERR_NO_FILE;
+        $newImagePath = null;
 
         if ($title === '' || $content === '') {
             $error = 'Title and content are required.';
@@ -73,21 +76,102 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $error = 'The title contains invalid characters.';
         } elseif (containsInvalidControlCharacters($content)) {
             $error = 'The content contains invalid characters.';
-        } else {
-            $statement = $db->prepare(
-                'UPDATE blogspots
-                 SET title = :title, content = :content
-                 WHERE blogID = :blogID'
-            );
-            $statement->execute([
-                ':title' => $title,
-                ':content' => $content,
-                ':blogID' => $postId
-            ]);
+        } elseif ($removeImage && $hasNewUpload) {
+            $error = 'Choose either a replacement image or remove the current image, not both.';
+        }
 
-            $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
-            header('Location: post.php?id=' . urlencode((string) $postId));
-            exit;
+        $statement = $db->prepare(
+            'SELECT blog_image FROM blogspots WHERE blogID = :blogID LIMIT 1'
+        );
+        $statement->execute([':blogID' => $postId]);
+        $currentPost = $statement->fetch(PDO::FETCH_ASSOC);
+
+        if ($error === '' && !$currentPost) {
+            $error = 'That blog post could not be found.';
+        }
+
+        if ($error === '' && $hasNewUpload) {
+            $uploadedImage = $_FILES['blog_image'];
+
+            if ($uploadedImage['error'] !== UPLOAD_ERR_OK) {
+                $error = 'The replacement image could not be uploaded.';
+            } elseif ($uploadedImage['size'] > 5 * 1024 * 1024) {
+                $error = 'The replacement image must be smaller than 5 MB.';
+            } elseif (!is_uploaded_file($uploadedImage['tmp_name'])) {
+                $error = 'The replacement image upload is invalid.';
+            } else {
+                $fileInformation = new finfo(FILEINFO_MIME_TYPE);
+                $mimeType = $fileInformation->file($uploadedImage['tmp_name']);
+                $allowedTypes = [
+                    'image/jpeg' => 'jpg',
+                    'image/png' => 'png',
+                    'image/webp' => 'webp'
+                ];
+
+                if (!isset($allowedTypes[$mimeType])) {
+                    $error = 'Only JPG, PNG and WebP replacement images are allowed.';
+                } else {
+                    $uploadDirectory = __DIR__ . '/uploads/blog/';
+
+                    if (!is_dir($uploadDirectory) && !mkdir($uploadDirectory, 0755, true)) {
+                        $error = 'The blog image directory could not be created.';
+                    } else {
+                        $filename = bin2hex(random_bytes(16)) . '.' . $allowedTypes[$mimeType];
+                        $destination = $uploadDirectory . $filename;
+
+                        if (!move_uploaded_file($uploadedImage['tmp_name'], $destination)) {
+                            $error = 'The replacement image could not be saved.';
+                        } else {
+                            $newImagePath = 'uploads/blog/' . $filename;
+                        }
+                    }
+                }
+            }
+        }
+
+        if ($error === '') {
+            $oldImagePath = $currentPost['blog_image'] ?? '';
+            $savedImagePath = $removeImage
+                ? ''
+                : ($newImagePath ?? $oldImagePath);
+
+            try {
+                $statement = $db->prepare(
+                    'UPDATE blogspots
+                     SET title = :title,
+                         content = :content,
+                         blog_image = :blog_image
+                     WHERE blogID = :blogID'
+                );
+                $statement->execute([
+                    ':title' => $title,
+                    ':content' => $content,
+                    ':blog_image' => $savedImagePath,
+                    ':blogID' => $postId
+                ]);
+
+                if (($removeImage || $newImagePath !== null) && $oldImagePath !== '') {
+                    $oldImageFile = blogImageFilePath($oldImagePath);
+
+                    if ($oldImageFile !== null) {
+                        unlink($oldImageFile);
+                    }
+                }
+
+                $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+                header('Location: post.php?id=' . urlencode((string) $postId));
+                exit;
+            } catch (PDOException $exception) {
+                if ($newImagePath !== null) {
+                    $newImageFile = blogImageFilePath($newImagePath);
+
+                    if ($newImageFile !== null) {
+                        unlink($newImageFile);
+                    }
+                }
+
+                $error = 'The blog post could not be updated.';
+            }
         }
     }
 }
@@ -124,7 +208,7 @@ $content = $_POST['content'] ?? $post['content'];
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Elms+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="post.css">
+    <link rel="stylesheet" href="post.css?v=20260804-1">
 </head>
 <body>
     <?php include __DIR__ . '/includes/topbar.php'; ?>
@@ -143,7 +227,7 @@ $content = $_POST['content'] ?? $post['content'];
                 </div>
             <?php endif; ?>
 
-            <form method="post" action="edit.php?id=<?= (int) $postId ?>" class="post-form">
+            <form method="post" action="edit.php?id=<?= (int) $postId ?>" class="post-form" enctype="multipart/form-data">
                 <input type="hidden" name="id" value="<?= (int) $postId ?>">
                 <input type="hidden" name="csrf_token" value="<?= escapeEdit($_SESSION['csrf_token']) ?>">
 
@@ -160,11 +244,32 @@ $content = $_POST['content'] ?? $post['content'];
                 </div>
 
                 <?php if (blogImageExists($post['blog_image'] ?? null)): ?>
-                    <div class="form-group">
+                    <div class="form-group edit-image-group">
                         <label>Current featured image</label>
                         <img class="edit-current-image" src="<?= escapeEdit($post['blog_image']) ?>" alt="<?= escapeEdit($post['title']) ?>">
+
+                        <label class="remove-image-option">
+                            <input type="checkbox" name="remove_image" value="1">
+                            <span>Remove the current image</span>
+                        </label>
                     </div>
                 <?php endif; ?>
+
+                <div class="form-group">
+                    <label for="blog_image">
+                        <?= blogImageExists($post['blog_image'] ?? null)
+                            ? 'Replace featured image'
+                            : 'Add featured image' ?>
+                    </label>
+                    <input
+                        id="blog_image"
+                        type="file"
+                        name="blog_image"
+                        class="edit-image-input"
+                        accept="image/jpeg,image/png,image/webp"
+                    >
+                    <p class="field-help">Optional. JPG, PNG or WebP, up to 5 MB.</p>
+                </div>
 
                 <div class="form-actions edit-form-actions">
                     <button type="submit" name="delete" class="delete-button" formnovalidate onclick="return confirm('Delete this post permanently?');">Delete Post</button>

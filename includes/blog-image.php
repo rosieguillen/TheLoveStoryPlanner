@@ -4,10 +4,10 @@
  * Confirm that a stored blog-image path points to an existing project file.
  * Invalid, removed, absolute, or out-of-project paths return false.
  */
-function blogImageExists(?string $imagePath): bool
+function blogImageFilePath(?string $imagePath): ?string
 {
     if ($imagePath === null || trim($imagePath) === '') {
-        return false;
+        return null;
     }
 
     $imagePath = str_replace('\\', '/', trim($imagePath));
@@ -17,7 +17,7 @@ function blogImageExists(?string $imagePath): bool
         str_starts_with($imagePath, '/') ||
         preg_match('/^[A-Za-z]:\//', $imagePath) === 1
     ) {
-        return false;
+        return null;
     }
 
     $projectRoot = realpath(dirname(__DIR__));
@@ -27,10 +27,17 @@ function blogImageExists(?string $imagePath): bool
     );
 
     if ($projectRoot === false || $candidate === false || !is_file($candidate)) {
-        return false;
+        return null;
     }
 
     $projectPrefix = strtolower($projectRoot . DIRECTORY_SEPARATOR);
 
-    return str_starts_with(strtolower($candidate), $projectPrefix);
+    return str_starts_with(strtolower($candidate), $projectPrefix)
+        ? $candidate
+        : null;
+}
+
+function blogImageExists(?string $imagePath): bool
+{
+    return blogImageFilePath($imagePath) !== null;
 }
