@@ -61,7 +61,7 @@ function homeEscape(?string $value): string
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Elms+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="HomePageStyle.css?v=20260804-1">
+    <link rel="stylesheet" href="HomePageStyle.css?v=20260804-2">
 </head>
 
 <body>
@@ -115,29 +115,48 @@ function homeEscape(?string $value): string
 </section>
 
 <section class="services" id="services">
-    <h2>Our Services</h2>
+    <header class="services-heading">
+        <p class="services-label">How We Can Help</p>
+        <h2>Wedding planning, thoughtfully tailored to you.</h2>
+        <p class="services-introduction">
+            Choose the level of support that fits your celebration. Every
+            service is grounded in calm guidance, thoughtful details and a
+            planning experience that feels genuinely personal.
+        </p>
+    </header>
+
     <div class="services-container">
-        <div class="service-card">
+        <article class="service-card">
+            <span class="service-number" aria-hidden="true">01</span>
             <div class="service-icon">
                 <img src="photos/icon-fullplanning.png" alt="Full Planning icon">
             </div>
             <h3>Full Planning</h3>
             <p>Complete wedding planning from start to finish, including venue selection, vendor coordination, and design consultation.</p>
-        </div>
-        <div class="service-card">
+        </article>
+
+        <article class="service-card">
+            <span class="service-number" aria-hidden="true">02</span>
             <div class="service-icon">
                 <img src="photos/icon-dayof.png" alt="Day-of Coordination icon">
             </div>
             <h3>Day-of Coordination</h3>
             <p>Professional coordination on your wedding day to ensure everything runs smoothly and stress-free.</p>
-        </div>
-        <div class="service-card">
+        </article>
+
+        <article class="service-card">
+            <span class="service-number" aria-hidden="true">03</span>
             <div class="service-icon">
                 <img src="photos/icon-design.png" alt="Design and Decor icon">
             </div>
             <h3>Design & Decor</h3>
             <p>Custom design concepts and decorative styling to bring your wedding vision to life.</p>
-        </div>
+        </article>
+    </div>
+
+    <div class="services-cta">
+        <p>Not sure which service is right for you?</p>
+        <a href="contact.php">Let&rsquo;s Talk About Your Wedding <span aria-hidden="true">&rarr;</span></a>
     </div>
 </section>
 
