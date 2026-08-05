@@ -62,6 +62,7 @@ function homeEscape(?string $value): string
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Elms+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="HomePageStyle.css?v=20260804-2">
+    <link rel="stylesheet" href="includes/shared.css?v=20260805-1">
 </head>
 
 <body>
@@ -69,6 +70,7 @@ function homeEscape(?string $value): string
 <?php include __DIR__ . '/includes/topbar.php'; ?>
 
 <header class="header-banner" id="home">
+    <h1 class="visually-hidden">The Love Story Planner</h1>
     <div class="headerpic">
         <img
             src="photos//header.png"
@@ -76,6 +78,8 @@ function homeEscape(?string $value): string
             class="header-img"
         >
     </div>
+
+</header>
 
 
 <section class="about" id="about">

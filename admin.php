@@ -23,6 +23,7 @@ function adminEscape(?string $value): string
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Elms+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="admin.css">
+    <link rel="stylesheet" href="includes/shared.css?v=20260805-1">
 </head>
 <body>
     <?php include __DIR__ . '/includes/topbar.php'; ?>

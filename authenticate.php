@@ -135,6 +135,7 @@ function escapeLogin(?string $value): string
     >
 
     <link rel="stylesheet" href="signin.css">
+    <link rel="stylesheet" href="includes/shared.css?v=20260805-1">
 </head>
 
 <body>

@@ -61,6 +61,7 @@ function createExcerpt($content, $length = 220)
     >
 
     <link rel="stylesheet" href="blogstyle.css">
+    <link rel="stylesheet" href="includes/shared.css?v=20260805-1">
 </head>
 
 <body>

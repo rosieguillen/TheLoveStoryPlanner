@@ -453,6 +453,7 @@ if (isset($_GET['id'])) {
     >
 
     <link rel="stylesheet" href="post.css?v=20260724-1">
+    <link rel="stylesheet" href="includes/shared.css?v=20260805-1">
 </head>
 
 <body>
